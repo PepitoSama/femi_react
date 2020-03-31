@@ -6,13 +6,14 @@ import { SearchOutlined } from '@ant-design/icons'
 import { connect } from 'react-redux'
 
 // Actions
-import changeRedirect from '../../Store/Actions/changeRedirect'
+import { redirect as changeRedirect, changeSearch } from '../../Store/Actions'
 import { bindActionCreators } from 'redux'
 
 const Search = class extends Component {
 
   onFinish = ({ search }) => {
-    this.props.changeRedirect('/search/' + search)
+    this.props.changeSearch(search)
+    this.props.changeRedirect('/search')
   }
 
   render() {
@@ -46,7 +47,7 @@ const Search = class extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ changeRedirect }, dispatch)
+  return bindActionCreators({ changeRedirect, changeSearch }, dispatch)
 }
 
 export default connect(null, mapDispatchToProps)(Search)

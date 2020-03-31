@@ -4,7 +4,7 @@ import './App.css';
 // Components
 import { Header, Footer } from './Components/Layout'
 import Login from './Components/Login/Login'
-import { AddRemarkDrawer, RemarkList, ShowRemark, SearchList } from './Components/Remark'
+import { AddRemarkDrawer, RemarkList, ShowRemark } from './Components/Remark'
 
 // Router
 import { BrowserRouter, Route, Redirect } from 'react-router-dom'
@@ -42,10 +42,7 @@ const App = class extends Component {
           <>
             <Route
               path='/'
-              render = { (props) =>
-                <RemarkList />
-              }
-              exact
+              component = { RemarkList }
             />
             <Route
               path='/Login'
@@ -61,12 +58,6 @@ const App = class extends Component {
               path='/Remark/:id'
               exact
               component = { ShowRemark }
-            />
-            <Route
-              path='/Search/:text'
-              exact
-              component = { SearchList }
-              exact
             />
           </>
         </BrowserRouter>

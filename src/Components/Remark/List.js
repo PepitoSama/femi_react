@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 
 // Antd
-import { List, Avatar, Row, Col } from 'antd'
-import { MessageTwoTone, DislikeTwoTone, DislikeFilled, DeleteTwoTone } from '@ant-design/icons'
+import { List, Avatar, Row, Col, Tooltip } from 'antd'
+import { MessageTwoTone, StarTwoTone, StarOutlined, DeleteTwoTone } from '@ant-design/icons'
 import IconText from './IconText'
 // Redux
 import { bindActionCreators } from 'redux'
@@ -11,18 +11,20 @@ import { connect } from 'react-redux'
 // Actions
 import { changeRemarks, addRemarks, removeRemark } from '../../Store/Actions/Remarks'
 import { likeRemark, dislikeRemark } from '../../Store/Actions/Remark'
-import changeRedirect from '../../Store/Actions/changeRedirect'
+import { redirect as changeRedirect, changeSearch } from '../../Store/Actions'
 
 // Axios
 import axios from 'axios'
 
 // Components
 import AddRemarks from './AddRemarks'
+import ShowTags from './ShowTags'
 
 const remarkList = class extends Component {
   
   async componentDidMount() {
     await this.refresh
+    this.props.changeSearch(null)
   }
 
   async deleteContent (id) {
@@ -69,6 +71,10 @@ const remarkList = class extends Component {
   }
 
   refresh = new Promise((resolve, reject) => {
+    var search = ''
+    if (this.props.search) {
+      search = this.props.search
+    }
     try {
       const url = `${process.env.REACT_APP_SERV_HOST}/api/remark/`
       const config = {
@@ -77,7 +83,7 @@ const remarkList = class extends Component {
         params: {
           start: 0,
           number: 0,
-          error: ''
+          search: search
         }
       }
       axios.get(url, config)
@@ -91,7 +97,8 @@ const remarkList = class extends Component {
             id: remark.id,
             countLike: remark.likes.length,
             countResp: remark.responses.length,
-            userId: remark.user.userId
+            userId: remark.user.userId,
+            tags: remark.tags
           }
           if(this.props.user != null) {
             remark.likes.find((like) => like.user.userId === this.props.user.userId) !== undefined
@@ -112,7 +119,7 @@ const remarkList = class extends Component {
   renderAction = (item) => {
     const itemAction = [
       <IconText
-        icon={item.liked ? DislikeFilled : DislikeTwoTone}
+        icon={item.liked ? StarTwoTone : StarOutlined}
         text={item.countLike}
         className='hvr-buzz-out'
         key="list-vertical-like-o"
@@ -182,7 +189,7 @@ const remarkList = class extends Component {
                     }
                     description = {item.description}
                   />
-                    {item.content}
+                    <ShowTags tags={item.tags}/>
                 </List.Item>
               )}
             />
@@ -194,13 +201,14 @@ const remarkList = class extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ removeRemark, changeRemarks, addRemarks, changeRedirect, likeRemark, dislikeRemark }, dispatch)
+  return bindActionCreators({ removeRemark, changeRemarks, addRemarks, changeRedirect, likeRemark, dislikeRemark, changeSearch }, dispatch)
 }
 
 function mapPropsToState(state) {
   return {
     remarks: state.remarks,
-    user: state.user
+    user: state.user,
+    search: state.search
   }
 }
 

@@ -11,6 +11,7 @@ import RemarkResponse from './RemarkResponse'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Responses from './Responses'
+import ShowTags from './ShowTags'
 
 // Actions
 import changeLookingRemark from '../../Store/Actions/Remark/changeLookingRemark'
@@ -72,6 +73,10 @@ const ShowRemark = class extends Component {
   remarkDetails = () => {
     return (
       <>
+        {this.props.remark.tags.length > 0
+          ? <ShowTags tags={this.props.remark.tags} />
+          : null
+        }
         <RemarkResponse id={this.props.remark.id} />
         <Responses responses={this.props.remark.responses} />
       </>
