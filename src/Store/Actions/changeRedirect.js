@@ -3,6 +3,5 @@ export default (redirect) => {
     type: 'changeRedirect',
     redirect
   }
-  console.log('Action in changeRedirect ', action)
   return action
 }

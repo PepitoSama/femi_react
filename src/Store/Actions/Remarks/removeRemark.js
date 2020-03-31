@@ -3,6 +3,5 @@ export default (id) => {
     type: 'removeRemark',
     id
   }
-  console.log('Action in removeRemark ', action)
   return action
 }

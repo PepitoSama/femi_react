@@ -1,7 +1,7 @@
-export default () => {
+export default (token) => {
   const action = {
-    type: 'login'
+    type: 'login',
+    token
   }
-  console.log('Action in login ', action)
   return action
 }

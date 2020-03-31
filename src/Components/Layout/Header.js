@@ -1,12 +1,18 @@
 import React, { Component } from 'react'
+
+// Antd
 import { PageHeader, Button } from 'antd';
+import { PoweroffOutlined } from '@ant-design/icons';
+
+// Redux
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { PoweroffOutlined,PlusSquareOutlined } from '@ant-design/icons';
+
+// Components
+import Search from './Search'
 
 // Actions
 import changeRedirect from '../../Store/Actions/changeRedirect'
-import changeToken from '../../Store/Actions/changeToken'
 import logout from '../../Store/Actions/Login/logout'
 
 const headerStyle = {
@@ -20,8 +26,8 @@ const headerStyle = {
 const Header = class extends Component {
 
   logout = () => {
-    this.props.changeToken(null)
     this.props.logout()
+    this.props.changeRedirect('/')
   }
 
   render() {
@@ -29,36 +35,38 @@ const Header = class extends Component {
       <PageHeader
         style = {headerStyle}
         className='site-page-header'
-        title={<p style={{color: 'white'}}>🤦‍♀️ Femi App 🤦‍♀️</p>}
+        title={
+          <h3 className="title_header hvr-pulse" style={{color: 'white'}} onClick={(e) => {this.props.changeRedirect(`/`)}}>
+            <span role="img" aria-label="womanFacepalming">🤦‍♀️</span>FemiApp<span role="img" aria-label="womanFacepalming">🤦‍♀️</span>
+          </h3>
+        }
         extra={[
-          <Button
-            key="1"
-            type="primary"
-            icon={<PlusSquareOutlined />}
-            onClick = {(e) => {
-              !this.props.isLogged
-                ? this.props.changeRedirect('/Login')
-                : this.props.changeRedirect('/Add')
+          <div
+            style={{
+              display: 'flex',
+              width: 'max-content',
+              justifyContent: 'flex-end',
             }}
           >
-            Ajouter
-          </Button>,
-          <Button
-            key="2"
-            type="primary"
-            icon={<PoweroffOutlined />}
-            danger = {this.props.isLogged}
-            onClick = {(e) => {
-              this.props.isLogged
-                ? this.logout()
-                : this.props.changeRedirect('/login')
-            }}
-          >
-            {this.props.isLogged
-              ? 'Déconnexion'
-              : 'Connexion'
-            }
-          </Button>
+            <Search />
+            <Button
+              key="2"
+              type="primary"
+              icon={<PoweroffOutlined />}
+              danger = {this.props.user}
+              onClick = {(e) => {
+                this.props.user
+                  ? this.logout()
+                  : this.props.changeRedirect('/login')
+              }}
+              className='hvr-push'
+            >
+              {this.props.user
+                ? 'Déconnexion'
+                : 'Connexion'
+              }
+            </Button>
+          </div>
         ]}
       />
     )
@@ -66,13 +74,12 @@ const Header = class extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ changeRedirect, changeToken, logout }, dispatch)
+  return bindActionCreators({ changeRedirect, logout }, dispatch)
 }
 
 function mapPropsToState(state) {
-  console.log('state Header : ', state)
   return {
-    isLogged: state.isLogged
+    user: state.user
   }
 }
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 // Antd
-import { Spin, Drawer, Button } from 'antd'
+import { Spin, Drawer } from 'antd'
 
 // Axios
 import axios from 'axios'
@@ -10,6 +10,7 @@ import axios from 'axios'
 import RemarkResponse from './RemarkResponse'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import Responses from './Responses'
 
 // Actions
 import changeLookingRemark from '../../Store/Actions/Remark/changeLookingRemark'
@@ -18,15 +19,7 @@ const ShowRemark = class extends Component {
   state = ({
     visible: false,
     loaded: false,
-    id: null,
-    content: null,
-    likes: [],
-    responses: [],
-    tags: [],
-    user: {
-      userId: null,
-      username: null
-    }
+    content: null
   })
 
   componentDidMount() {
@@ -46,6 +39,7 @@ const ShowRemark = class extends Component {
       })
       this.setState({
         loaded: true,
+        content: result.content
       })
     }).catch((err) => {
       console.log(err)
@@ -78,34 +72,24 @@ const ShowRemark = class extends Component {
   remarkDetails = () => {
     return (
       <>
-        <p>{this.props.remark.content}</p>
-        <p>Likes : {this.props.remark.likes.length}</p>
-        <p>Réponses : {this.props.remark.responses.length}</p>
-        {this.props.remark.responses.map((response, id) => {
-          return (
-            <ul key={id}>
-              <li>{id} : {response.content}</li>
-              <li>Likes : {response.likes.length}</li>
-              <li>User : {response.user.userId}</li>
-              <li onClick={(e) => {this.like(response.idResponse)}}><Button>Like</Button></li>
-            </ul>
-          )
-        })}
         <RemarkResponse id={this.props.remark.id} />
+        <Responses responses={this.props.remark.responses} />
       </>
     )
   }
 
   render() {
+    const emojiList = ['🤔', '🤭', '😘', '🤨', '🙄', '🧐', '😤', '🤡']
+    const emoji = emojiList[Math.floor(Math.random() * emojiList.length)]
     return(
       <>
         <Drawer
-          title="Remarque : "
-          placement="right"
+          title={emoji + ' ' + this.state.content + ' ' + emoji}
+          placement="bottom"
           closable={true}
           onClose={() => {this.setState({ visible: false })}}
           visible={this.state.visible}
-          width='40%'
+          height='60%'
         >
           {!this.state.loaded
             ? <Spin>Loading</Spin>
@@ -126,6 +110,5 @@ function mapPropsToState(state) {
     remark: state.remark
   }
 }
-
 
 export default connect(mapPropsToState, mapDispatchToProps)(ShowRemark)

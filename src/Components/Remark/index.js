@@ -1,8 +1,11 @@
 import RemarkList from './List'
-import AddRemark from './AddRemark'
+import AddRemarkDrawer from './AddRemarkDrawer'
 import ShowRemark from './ShowRemark'
+import SearchList from './SearchList'
+
 export {
   RemarkList,
-  AddRemark,
-  ShowRemark
+  AddRemarkDrawer,
+  ShowRemark,
+  SearchList
 }

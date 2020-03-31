@@ -1,13 +1,11 @@
 import { combineReducers } from 'redux'
-import tokenReducers from './tokenReducers'
-import loginReducers from './loginReducers'
+import userReducers from './userReducers'
 import remarksReducers from './remarksReducers'
 import redirectReducers from './redirectReducers'
 import remarkReducers from './remarkReducers'
 
 const allReducers = combineReducers({
-  token: tokenReducers,
-  isLogged: loginReducers,
+  user: userReducers,
   remarks: remarksReducers,
   redirect: redirectReducers,
   remark: remarkReducers

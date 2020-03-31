@@ -7,7 +7,6 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 // Actions
-import changeToken from '../../Store/Actions/changeToken'
 import login from '../../Store/Actions/Login/login'
 import changeRedirect from '../../Store/Actions/changeRedirect'
 
@@ -32,36 +31,29 @@ const passwordRules = [{
 const Login = class extends Component {
 
   state = ({
-    token: '',
     error: '',
     visible: false
   })
 
   componentDidMount() {
-    this.setState({
-      visible: true
-    })
-  }
-
-  changeToken = () => {
-    this.props.changeToken(this.state.token)
-    this.props.login()
+    if (!this.props.user) {
+      this.setState({
+        visible: true
+      })
+    }
   }
 
   onFinish = async (values) => {
-    console.log('Success:', values)
     try {
       await axios.post(`${process.env.REACT_APP_SERV_HOST}/api/user/login`, {
         username: values.username,
         password: values.password
       }).then((result) => {
-        this.setState({
-          token: result.data["auth-token"]
-        })
-        this.changeToken()
+        this.props.login(result.data["auth-token"])
         this.setState({
           visible: false
         })
+        this.props.changeRedirect('/')
       })
     } catch (err) {
       var error = ''
@@ -84,11 +76,11 @@ const Login = class extends Component {
     return (
       <Drawer
         title="Connectez vous"
-        placement="right"
+        placement="top"
         closable={true}
         onClose={() => {this.setState({ visible: false })}}
         visible={this.state.visible}
-        width={'40%'}
+        height={'50%'}
       >
         <Form
           {...layout}
@@ -134,7 +126,13 @@ const Login = class extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ changeToken, login, changeRedirect }, dispatch)
+  return bindActionCreators({ login, changeRedirect }, dispatch)
 }
 
-export default connect(null, mapDispatchToProps)(Login)
+function mapPropsToState(state) {
+  return {
+    user: state.user
+  }
+}
+
+export default connect(mapPropsToState, mapDispatchToProps)(Login)

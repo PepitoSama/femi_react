@@ -3,6 +3,5 @@ export default (remark) => {
     type: 'changeLookingRemark',
     remark
   }
-  console.log('Action in changeLookingRemark ', action)
   return action
 }

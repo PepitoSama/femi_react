@@ -15,14 +15,14 @@ import { bindActionCreators } from 'redux'
 const RemarkResponse = class extends Component {
 
   postContent = async ({ response }) => {
-    if (this.props.isLogged) {
+    if (this.props.user) {
       const url = `${process.env.REACT_APP_SERV_HOST}/api/remark/${this.props.id}`
       const data = {
         content: response
       }
       const config = {
         headers: {
-          'auth-token': this.props.token
+          'auth-token': this.props.user.token
         }
       }
       axios.post(url, data, config)
@@ -40,14 +40,14 @@ const RemarkResponse = class extends Component {
   render() {
     return (
       <Form
-        name="basic"
+        name="response"
         initialValues={{
           remember: true,
         }}
         onFinish={this.postContent}
       >
         <Form.Item
-          label="Réponse : "
+          label="Ce que vous auriez répondu : "
           name="response"
           rules={[
             {
@@ -58,7 +58,6 @@ const RemarkResponse = class extends Component {
         >
           <Input />
         </Form.Item>
-
         <Form.Item>
           <Button type="primary" htmlType="submit">
             Envoyer
@@ -75,8 +74,7 @@ function mapDispatchToProps(dispatch) {
 
 function mapPropsToState(state) {
   return {
-    isLogged: state.isLogged,
-    token: state.token,
+    user: state.user,
     remark: state.remark
   }
 }

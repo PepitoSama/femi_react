@@ -3,6 +3,5 @@ export default (remarks) => {
     type: 'changeRemarks',
     remarks
   }
-  console.log('Action in changeRemarks ', action)
   return action
 }

@@ -36,3 +36,43 @@
     transform: rotate(360deg);
   }
 }
+
+.remarkTitle {
+  outline: none;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.remarkTitle:hover {
+  cursor: pointer;
+}
+
+.list {
+  background-color: rgb(221, 221, 221);
+  padding: 30px;
+  border-radius: 5px;
+}
+
+.title_header {
+  color: #ffffff;
+  font-family: 'Lato',
+  sans-serif;
+  font-size: 30px;
+  margin: 1px;
+  cursor: pointer;
+}
+
+.item_content {
+  color: #084272;
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 20px;
+  line-height: 24px;
+  margin: 5px 0 24px;
+  text-align: center;
+  text-justify: inter-word;
+  cursor: pointer;
+}
+
+.list_item {
+  width: 100%;
+}

@@ -1,8 +1,22 @@
-import React from 'react'
+import React, { Component } from 'react'
 
-export default ({icon, text, id, action}) => (
-  <span>
-    {React.createElement(icon, { style: { marginRight: 8 } })}
-    {text}
-  </span>
-)
+const IconText = class extends Component {
+  render() {
+    return (
+      <span
+        onClick={() => { this.props.action(this.props.item) } }
+        className= {this.props.className}
+      >
+        {React.createElement(this.props.icon, {
+          style: { marginRight: 8 },
+          onClick: () => {
+            this.props.action(this.props.item)
+          }
+        })}
+        {this.props.text}
+      </span>
+    )
+  }
+}
+
+export default IconText
