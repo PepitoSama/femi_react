@@ -6,13 +6,12 @@ const colors = ["magenta", "red", "volcano", "orange", "gold", "lime", "green", 
 
 const ShowTags = class extends Component {
   render() {
-    console.log(this.props.tags)
     return(
-      <>
+      <div className="tags">
         {this.props.tags.map(tag => {
           return <Tag color={colors[Math.floor(Math.random() * colors.length)]}>{tag}</Tag>
         })}
-      </>
+      </div>
     )
   }
 }

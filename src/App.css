@@ -83,4 +83,9 @@
 
 .list_item {
   width: 100%;
+  margin: auto;
+}
+
+.tags {
+  margin-bottom: 20px;
 }

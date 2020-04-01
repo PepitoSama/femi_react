@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 
 // Antd
-import { List, Avatar, Row, Col, Tooltip, Button } from 'antd'
+import { List, Avatar, Row, Col, Tooltip, Button, message } from 'antd'
 import { MessageFilled, StarFilled, StarOutlined, DeleteFilled } from '@ant-design/icons'
 import IconText from './IconText'
+import InfiniteScroll from 'react-infinite-scroller';
+
 // Redux
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -22,9 +24,29 @@ import ShowTags from './ShowTags'
 
 const remarkList = class extends Component {
   
-  async componentDidMount() {
-    await this.refresh
+  state = ({
+    last: 0,
+    loading: false,
+    hasMore: true,
+    max: 0
+  })
+
+  componentDidMount = async () => {
+    window.scrollTo(0,0)
     this.props.changeSearch(null)
+    this.getMax
+    .then((max) => {
+      this.setState({
+        max: max
+      })
+    })
+    this.fetchData(10,0)
+    .then((result) => {
+      this.props.changeRemarks(result)
+      this.setState({
+        last: 10
+      })
+    })
   }
 
   async deleteContent (id) {
@@ -70,51 +92,91 @@ const remarkList = class extends Component {
     }
   }
 
-  refresh = new Promise((resolve, reject) => {
-    var search = ''
-    if (this.props.search) {
-      search = this.props.search
-    }
+  fetchData = (number, start) => {
+    return new Promise((resolve, reject) => {
+      var search = ''
+      if (this.props.search) {
+        search = this.props.search
+      }
+      try {
+        const url = `${process.env.REACT_APP_SERV_HOST}/api/remark/`
+        const config = {
+          method: 'get',
+          headers: { 'Content-Type': 'application/json' },
+          params: {
+            start: start,
+            number: number,
+            search: search
+          }
+        }
+        axios.get(url, config)
+        .then((remarks) => {
+          var listData = []
+          remarks.data.forEach((remark) => {
+            const antRemark = {
+              href: null,
+              title: remark.content,
+              avatar: 'https://img.icons8.com/cotton/64/000000/person-male--v2.png',
+              id: remark.id,
+              countLike: remark.likes.length,
+              countResp: remark.responses.length,
+              userId: remark.user.userId,
+              tags: remark.tags
+            }
+            if(this.props.user != null) {
+              remark.likes.find((like) => like.user.userId === this.props.user.userId) !== undefined
+              ? antRemark.liked = true
+              : antRemark.liked = false
+            }
+            
+            listData.push(antRemark)
+          })
+          resolve(listData)
+        })
+      } catch (err){
+        reject(err)
+      }
+    })
+  }
+
+  getMax = new Promise((resolve, reject) => {
     try {
-      const url = `${process.env.REACT_APP_SERV_HOST}/api/remark/`
+      const url = `${process.env.REACT_APP_SERV_HOST}/api/remark/max`
       const config = {
         method: 'get',
         headers: { 'Content-Type': 'application/json' },
-        params: {
-          start: 0,
-          number: 0,
-          search: search
-        }
       }
       axios.get(url, config)
-      .then((remarks) => {
-        var listData = []
-        remarks.data.forEach((remark) => {
-          const antRemark = {
-            href: null,
-            title: remark.content,
-            avatar: 'https://img.icons8.com/cotton/64/000000/person-male--v2.png',
-            id: remark.id,
-            countLike: remark.likes.length,
-            countResp: remark.responses.length,
-            userId: remark.user.userId,
-            tags: remark.tags
-          }
-          if(this.props.user != null) {
-            remark.likes.find((like) => like.user.userId === this.props.user.userId) !== undefined
-            ? antRemark.liked = true
-            : antRemark.liked = false
-          }
-          
-          listData.push(antRemark)
-        })
-        this.props.changeRemarks(listData)
-        resolve()
+      .then((max) => {
+        resolve(max.data.max)
       })
     } catch (err){
       reject(err)
     }
   })
+
+  handleInfiniteOnLoad = () => {
+    let data = this.props.remarks
+    console.log(data)
+    this.setState({
+      loading: true,
+    })
+    if (data.length >= this.state.max) {
+      message.warning('Fin !')
+      this.setState({
+        hasMore: false,
+        loading: false,
+      })
+      return
+    }
+    this.fetchData(10, this.state.last).then((result) => {
+      this.setState({
+        loading: false,
+        last: this.state.last+10
+      })
+      this.props.addRemarks(result)
+    })
+  }
 
   renderAction = (item) => {
     const itemAction = [
@@ -189,16 +251,17 @@ const remarkList = class extends Component {
             <AddRemarks />
           </Col>
           <Col xs={{ span: 22, offset:1 }} lg={{ span:14, offset:5 }} className='list'>
+          <InfiniteScroll
+            initialLoad={false}
+            pageStart={0}
+            loadMore={this.handleInfiniteOnLoad}
+            hasMore={!this.state.loading && this.state.hasMore}
+            useWindow={true}
+          >
             <List
-              itemLayout="vertical"
-              size="small"
-              pagination={{
-                onChange: () => {
-                  window.scrollTo(0,0)
-                },
-                pageSize: 10
-              }}
               dataSource={ this.props.remarks }
+              // itemLayout="vertical"
+              // size="small"
               renderItem = { item => (
                 <List.Item
                   key={item.id}
@@ -223,6 +286,7 @@ const remarkList = class extends Component {
                 </List.Item>
               )}
             />
+          </InfiniteScroll>
           </Col>
         </Row>
       </>

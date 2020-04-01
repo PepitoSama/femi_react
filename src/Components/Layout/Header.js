@@ -47,10 +47,10 @@ const Header = class extends Component {
               justifyContent: 'flex-end',
               paddingTop: '10px'
             }}
+            key='divHeader'
           >
-            <Search />
+            <Search/>
             <Button
-              key="2"
               type="primary"
               icon={<PoweroffOutlined />}
               danger = {this.props.user}
