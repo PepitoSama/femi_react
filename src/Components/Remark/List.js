@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 
 // Antd
-import { List, Avatar, Row, Col, Tooltip } from 'antd'
-import { MessageTwoTone, StarTwoTone, StarOutlined, DeleteTwoTone } from '@ant-design/icons'
+import { List, Avatar, Row, Col, Tooltip, Button } from 'antd'
+import { MessageFilled, StarFilled, StarOutlined, DeleteFilled } from '@ant-design/icons'
 import IconText from './IconText'
 // Redux
 import { bindActionCreators } from 'redux'
@@ -118,33 +118,63 @@ const remarkList = class extends Component {
 
   renderAction = (item) => {
     const itemAction = [
-      <IconText
-        icon={item.liked ? StarTwoTone : StarOutlined}
-        text={item.countLike}
-        className='hvr-buzz-out'
-        key="list-vertical-like-o"
-        item={item}
-        action={(item) => {this.likeContent(item)}} 
-      />,
-      <IconText
-        icon={MessageTwoTone}
-        text={item.countResp}
-        key="list-vertical-message"
-        className='hvr-buzz-out'
-        item={item}
-        action={(item) => {this.props.changeRedirect(`/Remark/${item.id}`)}} 
-      />
+      <Tooltip
+        placement="bottom"
+        title="J'ai déja entendu ça !"
+        onClick={(e) => {this.likeContent(item)}} 
+      >
+        <Button
+          type="primary"
+          shape="round"
+        >
+          <IconText
+            icon={item.liked ? StarFilled : StarOutlined}
+            text={item.countLike}
+            className='hvr-buzz-out'
+            key="list-vertical-like-o"
+            item={item}
+          />
+        </Button>
+      </Tooltip>,
+      <Tooltip
+        placement="bottom"
+        title='Répondre'
+        onClick={(e) => {this.props.changeRedirect(`/Remark/${item.id}`)}} 
+      >
+        <Button
+          type="primary"
+          shape="round"
+        >
+          <IconText
+            icon={MessageFilled}
+            text={item.countResp}
+            key="list-vertical-message"
+            className='hvr-buzz-out'
+            item={item}
+          />
+        </Button>
+      </Tooltip>
     ]
     if(this.props.user) {
       if(this.props.user.userId === item.userId) {
         itemAction.push(
-          <IconText
-            icon={DeleteTwoTone}
-            key="list-vertical-delete"
-            item={item}
-            className='hvr-buzz-out'
-            action={(item) => {this.deleteContent(item.id)}}
-          />
+          <Tooltip
+            placement="bottom"
+            title='Supprimer'
+            onClick={(e) => {this.deleteContent(item.id)}}
+          >
+            <Button
+              type="danger"
+              shape="round"
+            >
+              <IconText
+                icon={DeleteFilled}
+                key="list-vertical-delete"
+                item={item}
+                className='hvr-buzz-out'
+              />
+            </Button>
+          </Tooltip>
         )
       }
     }
@@ -173,7 +203,7 @@ const remarkList = class extends Component {
                 <List.Item
                   key={item.id}
                   actions={this.renderAction(item)}
-                  className='hvr-fade-custom hvr-grow list_item'
+                  className='hvr-fade-custom hvr-grow-custom list_item'
                 >
                   <List.Item.Meta
                     avatar={<Avatar src={item.avatar} />}

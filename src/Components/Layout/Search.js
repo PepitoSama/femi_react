@@ -36,7 +36,12 @@ const Search = class extends Component {
             <Input style={{ width: '70%' }} placeholder="Rechercher" />
           </Form.Item>
           <Tooltip title="Rechercher">
-            <Button type="primary" htmlType="submit" style={{ marginLeft: 8 }}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ marginLeft: 8 }}
+              className="hvr-push"
+            >
               <SearchOutlined />
             </Button>
           </Tooltip>

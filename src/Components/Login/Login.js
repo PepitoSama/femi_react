@@ -11,28 +11,38 @@ import login from '../../Store/Actions/Login/login'
 import changeRedirect from '../../Store/Actions/changeRedirect'
 
 const layout = {
-  labelCol: { span: 5 },
-  wrapperCol: { span: 18 },
+  labelCol: { span: 3 },
+  wrapperCol: { span: 21 },
 }
 const tailLayout = {
-  wrapperCol: { offset: 0, span: 24 },
+  wrapperCol: { offset: 4, span: 16 },
 }
 
 const usernameRules = [{
   required: true,
-  message: 'Please input your username!'
+  message: 'Entrez votre nom d\'utilisateur !',
+  min: 6
 }]
 
 const passwordRules = [{
   required: true,
-  message: 'Please input your password!'
+  message: 'Entrez votre mot de passe !',
+  min: 6
+}]
+
+const emailRules = [{
+  required: true,
+  message: 'Entrez votre email !',
+
 }]
 
 const Login = class extends Component {
 
   state = ({
     error: '',
-    visible: false
+    visible: false,
+    loginVisible: true,
+    message: ''
   })
 
   componentDidMount() {
@@ -43,7 +53,7 @@ const Login = class extends Component {
     }
   }
 
-  onFinish = async (values) => {
+  login = async (values) => {
     try {
       await axios.post(`${process.env.REACT_APP_SERV_HOST}/api/user/login`, {
         username: values.username,
@@ -67,8 +77,34 @@ const Login = class extends Component {
       })
     }
   }
+
+  register = async (values) => {
+    try {
+      await axios.post(`${process.env.REACT_APP_SERV_HOST}/api/user/register`, {
+        username: values.username,
+        password: values.password,
+        email: values.email
+      }).then((result) => {
+        this.setState({
+          loginVisible: true,
+          registerVisible: false,
+          message: `Vous être enregistré ${values.username}!`
+        })
+      })
+    } catch (err) {
+      var error = ''
+      if (err.response.status === 400) {
+        error = 'Bad username or Password'
+      } else {
+        error = 'Error'
+      }
+      this.setState({
+        error: error
+      })
+    }
+  }
   
-  onFinishFailed(errorInfo) {
+  loginFailed(errorInfo) {
     console.log('Failed:', errorInfo)
   }
 
@@ -84,31 +120,86 @@ const Login = class extends Component {
       >
         <Form
           {...layout}
-          name="basic"
+          name="Login"
           initialValues={{ remember: true }}
-          onFinish={this.onFinish}
-          onFinishFailed={this.onFinishFailed}
+          onFinish={this.login}
+          onFinishFailed={this.loginFailed}
+          style={this.state.loginVisible
+            ? { display: 'block' }
+            : { display: 'none' }
+          }
         >
-          <Form.Item
-            label="Username"
-            name="username"
-            rules={usernameRules}
-          >
-            <Input />
-          </Form.Item>
-    
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={passwordRules}
-          >
-            <Input.Password />
-          </Form.Item>
-    
           <Form.Item {...tailLayout}>
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
+            <Form.Item
+              label="Nom d'utilisateur"
+              name="username"
+              rules={usernameRules}
+            >
+              <Input />
+            </Form.Item>
+      
+            <Form.Item
+              label="Mot de passe"
+              name="password"
+              rules={passwordRules}
+            >
+              <Input.Password />
+            </Form.Item>
+      
+            <Form.Item >
+              <Button type="primary" htmlType="submit">
+                Se connecter
+              </Button>
+              <Button type="link" htmlType="button" onClick={(e) => this.setState({ loginVisible: false, registerVisible: true })}>
+                Vous n'avez pas encore de compte ?
+              </Button>
+            </Form.Item>
+          </Form.Item>
+          <p style={{ color: 'red' }}>{this.state.error}</p>
+          <p style={{ color: 'green' }}>{this.state.message}</p>
+        </Form>
+
+        <Form
+          {...layout}
+          name="register"
+          initialValues={{ remember: true }}
+          onFinish={this.register}
+          onFinishFailed={this.registerFailed}
+          style={this.state.registerVisible
+            ? { display: 'block' }
+            : { display: 'none' }
+          }
+        >
+          <Form.Item {...tailLayout}>
+            <Form.Item
+              label="Nom d'utilisateur"
+              name="username"
+              rules={usernameRules}
+            >
+              <Input />
+            </Form.Item>
+      
+            <Form.Item
+              label="Mot de passe"
+              name="password"
+              rules={passwordRules}
+            >
+              <Input.Password />
+            </Form.Item>
+
+            <Form.Item
+              label="Email"
+              name="email"
+              rules={emailRules}
+            >
+              <Input />
+            </Form.Item>
+      
+            <Form.Item >
+              <Button type="primary" htmlType="submit">
+                S'enregister
+              </Button>
+            </Form.Item>
           </Form.Item>
           <p style={{ color: 'red' }}>{this.state.error}</p>
         </Form>

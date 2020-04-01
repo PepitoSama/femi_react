@@ -4,14 +4,10 @@ const IconText = class extends Component {
   render() {
     return (
       <span
-        onClick={() => { this.props.action(this.props.item) } }
         className= {this.props.className}
       >
         {React.createElement(this.props.icon, {
-          style: { marginRight: 8 },
-          onClick: () => {
-            this.props.action(this.props.item)
-          }
+          style: { marginRight: 8 }
         })}
         {this.props.text}
       </span>

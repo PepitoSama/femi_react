@@ -84,7 +84,7 @@ const ShowRemark = class extends Component {
   }
 
   render() {
-    const emojiList = ['🤔', '🤭', '😘', '🤨', '🙄', '🧐', '😤', '🤡']
+    const emojiList = ['🤔', '🤭', '🤨', '🙄', '🧐', '😤', '🤡']
     const emoji = emojiList[Math.floor(Math.random() * emojiList.length)]
     return(
       <>

@@ -34,9 +34,8 @@ const Header = class extends Component {
     return (
       <PageHeader
         style = {headerStyle}
-        className='site-page-header'
         title={
-          <h3 className="title_header hvr-pulse" style={{color: 'white'}} onClick={(e) => {this.props.changeRedirect(`/`)}}>
+          <h3 className="title_header hvr-wobble-skew" style={{color: 'white'}} onClick={(e) => {this.props.changeRedirect(`/`)}}>
             <span role="img" aria-label="womanFacepalming">🤦‍♀️</span>FemiApp<span role="img" aria-label="womanFacepalming">🤦‍♀️</span>
           </h3>
         }
@@ -46,6 +45,7 @@ const Header = class extends Component {
               display: 'flex',
               width: 'max-content',
               justifyContent: 'flex-end',
+              paddingTop: '10px'
             }}
           >
             <Search />

@@ -39,7 +39,8 @@ const AddRemarks = class extends Component {
           href: null,
           title: result.data.content,
           avatar: 'https://img.icons8.com/cotton/64/000000/person-male--v2.png',
-          id: result.data.id
+          id: result.data.id,
+          tags: tags
         })
         this.props.changeRedirect(`/Remark/${result.data.id}`)
       })
@@ -77,11 +78,16 @@ const AddRemarks = class extends Component {
               },
             ]}
           >
-            <Input style={{ width: '80%' }} placeholder="Poster une remarque que vous avez entendu" />
+            <Input style={{ width: '80%' }} placeholder="Postez une remarque sexiste que vous avez entendu" />
           </Form.Item>
           <Tooltip title="Envoyer">
-            <Button type="primary" htmlType="submit" style={{ marginLeft: 8 }}>
-            <SendOutlined />
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ marginLeft: 8 }}
+              className="hvr-push"
+            >
+              <SendOutlined />
             </Button>
           </Tooltip>
         </Form.Item>
