@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 // Antd
-import { List, Avatar, Row, Col, Tooltip, Button, message } from 'antd'
+import { List, Avatar, Row, Col, Tooltip, Button, message, Spin } from 'antd'
 import { MessageFilled, StarFilled, StarOutlined, DeleteFilled } from '@ant-design/icons'
 import IconText from './IconText'
 import InfiniteScroll from 'react-infinite-scroller';
@@ -162,7 +162,7 @@ const remarkList = class extends Component {
       loading: true,
     })
     if (data.length >= this.state.max) {
-      message.warning('Fin !')
+      message.info('Fin des remarques')
       this.setState({
         hasMore: false,
         loading: false,
@@ -285,7 +285,13 @@ const remarkList = class extends Component {
                     <ShowTags tags={item.tags}/>
                 </List.Item>
               )}
-            />
+            >
+              {this.state.loading && this.state.hasMore && (
+                <div className="demo-loading-container">
+                  <Spin />
+                </div>
+              )}
+            </List>
           </InfiniteScroll>
           </Col>
         </Row>

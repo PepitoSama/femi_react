@@ -10,14 +10,6 @@ import { bindActionCreators } from 'redux'
 import login from '../../Store/Actions/Login/login'
 import changeRedirect from '../../Store/Actions/changeRedirect'
 
-const layout = {
-  labelCol: { span: 3 },
-  wrapperCol: { span: 21 },
-}
-const tailLayout = {
-  wrapperCol: { offset: 4, span: 16 },
-}
-
 const usernameRules = [{
   required: true,
   message: 'Entrez votre nom d\'utilisateur !',
@@ -119,7 +111,6 @@ const Login = class extends Component {
         height={'50%'}
       >
         <Form
-          {...layout}
           name="Login"
           initialValues={{ remember: true }}
           onFinish={this.login}
@@ -129,7 +120,7 @@ const Login = class extends Component {
             : { display: 'none' }
           }
         >
-          <Form.Item {...tailLayout}>
+          <Form.Item>
             <Form.Item
               label="Nom d'utilisateur"
               name="username"
@@ -160,7 +151,6 @@ const Login = class extends Component {
         </Form>
 
         <Form
-          {...layout}
           name="register"
           initialValues={{ remember: true }}
           onFinish={this.register}
@@ -170,7 +160,7 @@ const Login = class extends Component {
             : { display: 'none' }
           }
         >
-          <Form.Item {...tailLayout}>
+          <Form.Item>
             <Form.Item
               label="Nom d'utilisateur"
               name="username"

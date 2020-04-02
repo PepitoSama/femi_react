@@ -43,7 +43,6 @@ const Header = class extends Component {
           <div
             style={{
               display: 'flex',
-              width: 'max-content',
               justifyContent: 'flex-end',
               paddingTop: '10px'
             }}
