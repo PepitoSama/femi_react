@@ -33,7 +33,7 @@ const Search = class extends Component {
               },
             ]}
           >
-            <Input style={{ width: '70%' }} placeholder="Rechercher" />
+            <Input style={{ width: '70%' }} placeholder="Rechercher un Tag" />
           </Form.Item>
           <Tooltip title="Rechercher">
             <Button

@@ -33,7 +33,8 @@ const remarkList = class extends Component {
 
   componentDidMount = async () => {
     window.scrollTo(0,0)
-    this.props.changeSearch(null)
+    this.props.changeSearch([])
+    // this.props.changeRemarks(null)
     this.getMax
     .then((max) => {
       this.setState({
